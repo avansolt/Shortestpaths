@@ -99,9 +99,11 @@ int main()
            d_edges[i].weight =val;
           
           if(final.find(node1) == final.end())
-          { final[node1] = 999;  }
+          { final[node1] = 999;
+            picked[node1] = false;  }
           if(final.find(node2) == final.end())
-          { final[node2] = 999;  }
+          { final[node2] = 999;  
+            picked[node2] = false;}
    
 
   cout <<d_edges[i].node1<<" " <<  d_edges[i].node2 <<  d_edges[i].weight << endl;
@@ -133,13 +135,23 @@ void d_Dijkstra(directed d_edges[], int edges_num, char S)
    while(!Q.empty())
    {
       u = Q.top().first;
-     cout<<"u: "<<u <<endl;
       Q.pop();
+
+     if(picked.find(u)->second == false )
+      { picked[u] = true;
+       cout<<"picked: "<< u << " " << picked.find(u)->second <<endl;
+      }
+      else
+        {continue;}
+
+
+     cout<<"u: "<<u <<endl;
 
       for(int i=0; i < edges_num ; i++)
       { 
-           if(d_edges[i].node1 == u )
+           if(d_edges[i].node1 == u && picked.find(i)->second == false )
              {
+                 
                 node = d_edges[i].node2; //node it that gets the weight
      cout<< "node2: "<<node <<endl;
 
@@ -147,7 +159,7 @@ void d_Dijkstra(directed d_edges[], int edges_num, char S)
  		{
 		    	
                     final[node] = d_edges[i].weight + final.find(u)->second;;
-         cout <<"node2 weight: "<< final.find(node)->second<<endl;            
+                  cout <<"node2 weight: "<< final.find(node)->second<<endl;            
         
                    Q.push(pp(node, final.find(node)->second));
                    
