@@ -6,20 +6,32 @@
 #include<sstream>
 #include <list>
 #include <queue> 
+#define pp pair<char,int>
 using namespace std;
 
 map<char, int> final;
+map<char, bool> picked;
+
+class Prioritize
+{
+public:
+    int operator() ( const pair<char, int>& p1, const pair<char, int>& p2 )
+    {
+        return p1.second > p2.second;
+    }
+};
+
 
 struct directed{
   char node1;  //from
   char node2;  //to
   int weight;
-  bool picked;
 };
 
 //Functions
-void d_Dijkstra(directed d_edges[], int edges_num);
 
+void d_Dijkstra(directed d_edges[], int edges_num,char S);
+void ud_Dijkstra(directed ud_edges[], int edges_num, char S);
 
 
 int main()
@@ -55,10 +67,10 @@ int main()
 
     stringstream ss(input);
     char hold;
-  ss  >> hold;
+    ss  >> hold;
 
         while(!ss.eof())     
-        {
+  	{
            char node1, node2;
            int val;
            ss >> node1 >> node2 >> val;
@@ -85,22 +97,69 @@ int main()
            d_edges[i].node1 = node1;
            d_edges[i].node2 = node2;
            d_edges[i].weight =val;
-           d_edges[i].picked = false;
-     cout <<d_edges[i].node1<<" " <<  d_edges[i].node2 <<  d_edges[i].weight << endl;
+          
+          if(final.find(node1) == final.end())
+          { final[node1] = 999;  }
+          if(final.find(node2) == final.end())
+          { final[node2] = 999;  }
+   
+
+  cout <<d_edges[i].node1<<" " <<  d_edges[i].node2 <<  d_edges[i].weight << endl;
            i++;           }
         }
 
   cout << "edges: "<< edges_num << " " <<i<<endl;
+  char S;
+ 
+  cout<< "Please enter the source node "<<endl;
+  cin >> S;
 
         if(type== 'D')
-          d_Dijkstra(d_edges,edges_num);
+          d_Dijkstra(d_edges,edges_num, S);
 
 
 
   return 0;
 }//end main
-void d_Dijkstra(directed d_edges[], int edges_num)
+void d_Dijkstra(directed d_edges[], int edges_num, char S)
 {
+    priority_queue<pp, vector<pp> , Prioritize > Q;
+   
+    char u, node; 
+   
+    final[S] = 0;
+    Q.push(pp(S,0));
+   
+   while(!Q.empty())
+   {
+      u = Q.top().first;
+     cout<<"u: "<<u <<endl;
+      Q.pop();
 
+      for(int i=0; i < edges_num ; i++)
+      { 
+           if(d_edges[i].node1 == u )
+             {
+                node = d_edges[i].node2; //node it that gets the weight
+     cout<< "node2: "<<node <<endl;
+
+                if(final.find(node)->second > d_edges[i].weight + final.find(u)->second)
+ 		{
+		    	
+                    final[node] = d_edges[i].weight + final.find(u)->second;;
+         cout <<"node2 weight: "<< final.find(node)->second<<endl;            
+        
+                   Q.push(pp(node, final.find(node)->second));
+                   
+		}
+
+           }
+
+      }
+ 
+   }
+
+
+  
 
 } 
