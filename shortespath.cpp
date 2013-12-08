@@ -116,6 +116,8 @@ int main()
   cout<< "Please enter the source node "<<endl;
   cin >> S;
 
+  cout<<"Dijkstra\n"<<"Source : " << S<< endl;
+  
         if(type== 'D')
           d_Dijkstra(d_edges,edges_num, S);
 
@@ -138,14 +140,12 @@ void d_Dijkstra(directed d_edges[], int edges_num, char S)
       Q.pop();
 
      if(picked.find(u)->second == false )
-      { picked[u] = true;
-       cout<<"picked: "<< u << " " << picked.find(u)->second <<endl;
-      }
+      { picked[u] = true;}
       else
         {continue;}
 
 
-     cout<<"u: "<<u <<endl;
+     cout<<"Node "<< u<<" : " << final.find(u)->second <<endl;
 
       for(int i=0; i < edges_num ; i++)
       { 
@@ -153,13 +153,13 @@ void d_Dijkstra(directed d_edges[], int edges_num, char S)
              {
                  
                 node = d_edges[i].node2; //node it that gets the weight
-     cout<< "node2: "<<node <<endl;
+     //cout<< "node2: "<<node <<endl;
 
                 if(final.find(node)->second > d_edges[i].weight + final.find(u)->second)
  		{
 		    	
                     final[node] = d_edges[i].weight + final.find(u)->second;;
-                  cout <<"node2 weight: "<< final.find(node)->second<<endl;            
+               //   cout <<"node2 weight: "<< final.find(node)->second<<endl;            
         
                    Q.push(pp(node, final.find(node)->second));
                    
