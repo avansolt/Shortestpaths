@@ -66,7 +66,7 @@ int main()
 
 
     stringstream ss(input);
-    char hold;
+    string hold;
     ss  >> hold;
 
         while(!ss.eof())     
@@ -76,12 +76,13 @@ int main()
            ss >> node1 >> node2 >> val;
            if(ss.eof()){break;}
            edges_num++;   
-       } 
+       cout << node1<< " " <<node2<<endl;
+        } 
     stringstream sa(input2);
 
     directed d_edges[edges_num], ud_edges[edges_num]; 
     int i=0;
-   char type;
+   string type;
 
      sa >> type;     
 
@@ -118,10 +119,15 @@ int main()
 
   cout<<"Dijkstra\n"<<"Source : " << S<< endl;
   
-        if(type== 'D')
-          d_Dijkstra(d_edges,edges_num, S);
-
-
+        if(type== "D")
+          {d_Dijkstra(d_edges,edges_num, S);}
+        else{ud_Dijkstra(d_edges,edges_num, S);}
+  int k;
+  cout<<"Please plug in k: \n";
+  cin >> k;
+  cout<<"Please plug inthe Source node:\n";
+  cin >> S;
+ 
 
   return 0;
 }//end main
@@ -153,25 +159,69 @@ void d_Dijkstra(directed d_edges[], int edges_num, char S)
              {
                  
                 node = d_edges[i].node2; //node it that gets the weight
-     //cout<< "node2: "<<node <<endl;
 
                 if(final.find(node)->second > d_edges[i].weight + final.find(u)->second)
  		{
-		    	
                     final[node] = d_edges[i].weight + final.find(u)->second;;
-               //   cout <<"node2 weight: "<< final.find(node)->second<<endl;            
-        
-                   Q.push(pp(node, final.find(node)->second));
-                   
+                    Q.push(pp(node, final.find(node)->second));
 		}
-
            }
-
       }
- 
    }
+}//end of directed
+void ud_Dijkstra(directed ud_edges[], int edges_num, char S)
+{
+
+   priority_queue<pp, vector<pp> , Prioritize > Q;
+
+    char u, node,node_;
+
+    final[S] = 0;
+    Q.push(pp(S,0));
+
+   while(!Q.empty())
+   {
+      u = Q.top().first;
+      Q.pop();
+
+     if(picked.find(u)->second == false )
+      { picked[u] = true;}
+      else
+        {continue;}
 
 
-  
+     cout<<"Node "<< u<<" : " << final.find(u)->second <<endl;
 
-} 
+      for(int i=0; i < edges_num ; i++)
+      {
+           if(ud_edges[i].node1 == u || ud_edges[i].node2 == u)
+             {
+                 node = ud_edges[i].node2; //node it that gets the weight
+                 node_ = ud_edges[i].node1;
+
+                 //if node2 != u and has not been used
+                 if(node != u &&  picked.find(node)->second == false)
+                 {
+                    if(final.find(node)->second > ud_edges[i].weight + final.find(u)->second)
+                    {
+                      final[node] = ud_edges[i].weight + final.find(u)->second;;
+                      Q.push(pp(node, final.find(node)->second));
+                    }//end if
+                 }//end if
+                 
+                   //if node1 != u and has not been used
+                 if(node_ != u &&  picked.find(node_)->second == false)
+                 {
+                    if(final.find(node_)->second >ud_edges[i].weight + final.find(u)->second)
+                    {
+                      final[node_] = ud_edges[i].weight + final.find(u)->second;;
+                      Q.push(pp(node_, final.find(node_)->second));
+                    }//end if
+                 }//end if
+                  
+                 
+              }//end if
+        }//end for
+      }//end while
+
+}//end of undirected 
