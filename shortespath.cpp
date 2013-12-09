@@ -133,8 +133,13 @@ int main()
 
    //print nodes shortest path
    for (it=final.begin(); it!=final.end(); ++it)
-       {cout <<"Node: "<<it->first << " = " << it->second << '\n';
-         it->second = max; }
+   { 
+	 if(it->second == max)
+	  {cout <<"Node: " <<it->first << " = Unreachable\n";}
+	 else{
+      cout <<"Node: " <<it->first << " = " << it->second << '\n';}
+      it->second = max;
+   }
 
   int k;
   cout<<"Please plug in k: \n";
@@ -152,7 +157,11 @@ int main()
   else{ud_Dijkstra(d_edges,edges_num, S, k);}
 
   for (it=final.begin(); it!=final.end(); ++it)
-  {cout <<"Node: " <<it->first << " = " << it->second << '\n';
+  {
+     if(it->second == max)
+	 {cout <<"Node: " <<it->first << " = Unreachable\n";}
+	 else{
+     cout <<"Node: " <<it->first << " = " << it->second << '\n';}
      it->second = max; }
 
 
