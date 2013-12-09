@@ -11,7 +11,7 @@ using namespace std;
 
 map<char, int> final;
 map<char, bool> picked;
-map<char, int> count;
+//map<char, int> count;
  
 class Prioritize
 {
@@ -100,10 +100,10 @@ int main()
            d_edges[i].weight =val;
           
           if(final.find(node1) == final.end())
-          { final[node1] = max; count[node1] = 0;
+          { final[node1] = max; //count[node1] = 0;
             picked[node1] = false;  }
           if(final.find(node2) == final.end())
-          { final[node2] = max;  count[node2] = 0;
+          { final[node2] = max;  //count[node2] = 0;
             picked[node2] = false;}
    
            i++;           }
@@ -125,11 +125,11 @@ int main()
 
    //print nodes shortest path
    for (it=final.begin(); it!=final.end(); ++it)
-       {cout << it->first << " = " << it->second << '\n';
+       {cout <<"Node: "<<it->first << " = " << it->second << '\n';
          it->second = max; }
-
+    /*
    for (it=count.begin(); it!=count.end(); ++it)
-       { it->second = 0; }
+       { it->second = 0; }*/
 
   int k;
   cout<<"Please plug in k: \n";
@@ -142,13 +142,13 @@ int main()
   for (itr=picked.begin(); itr!=picked.end(); ++itr)
         itr->second = false;
 
-        if(type== "D")
-          {cout<<"ok\n"; d_Dijkstra(d_edges,edges_num, S, k);}
-        else{ud_Dijkstra(d_edges,edges_num, S, k);}
+  if(type== "D")
+  { d_Dijkstra(d_edges,edges_num, S, k);}
+  else{ud_Dijkstra(d_edges,edges_num, S, k);}
 
-   for (it=final.begin(); it!=final.end(); ++it)
-       {cout << it->first << " = " << it->second << '\n';
-         it->second = max; }
+  for (it=final.begin(); it!=final.end(); ++it)
+  {cout << it->first << " = " << it->second << '\n';
+     it->second = max; }
 
 
   return 0;
@@ -156,7 +156,7 @@ int main()
 void d_Dijkstra(directed d_edges[], int edges_num, char S, int k)
 {
     priority_queue<pp, vector<pp> , Prioritize > Q;
-    int counter=0;  
+    int counter=0;   //Edges from the source node
     char u, node; 
    
     final[S] = 0;
@@ -173,35 +173,30 @@ void d_Dijkstra(directed d_edges[], int edges_num, char S, int k)
         {continue;}
 
 
-     cout<<"Node "<< u<<" : " << final.find(u)->second <<endl;
-
       for(int i=0; i < edges_num ; i++)
       { 
            if(d_edges[i].node1 == u && picked.find(i)->second == false )
-             {
-                 
-                node = d_edges[i].node2; //node it that gets the weight
+           {             
+             node = d_edges[i].node2; //node it that gets the weight
 
-                if(final.find(node)->second > d_edges[i].weight + final.find(u)->second)
- 		{
+             if(final.find(node)->second > d_edges[i].weight + final.find(u)->second)
+ 		     {
 	           if(counter < k){
                     final[node] = d_edges[i].weight + final.find(u)->second;
                     Q.push(pp(node, final.find(node)->second));
 	            }
-                }
+             }
            }
-      } counter++;
-                    count.find(S)->second+=1;
-
+      }
+	  counter++;
    }
 }//end of directed
 void ud_Dijkstra(directed ud_edges[], int edges_num, char S, int k)
 {
-
-   priority_queue<pp, vector<pp> , Prioritize > Q;
-
+    priority_queue<pp, vector<pp> , Prioritize > Q;
+    int counter = 0;
     char u, node,node_;
-
+   
     final[S] = 0;
     Q.push(pp(S,0));
 
@@ -215,9 +210,6 @@ void ud_Dijkstra(directed ud_edges[], int edges_num, char S, int k)
       else
         {continue;}
 
-
-     cout<<"Node "<< u<<" : " << final.find(u)->second <<endl;
-
       for(int i=0; i < edges_num ; i++)
       {
            if(ud_edges[i].node1 == u || ud_edges[i].node2 == u)
@@ -230,8 +222,10 @@ void ud_Dijkstra(directed ud_edges[], int edges_num, char S, int k)
                  {
                     if(final.find(node)->second > ud_edges[i].weight + final.find(u)->second)
                     {
-                      final[node] = ud_edges[i].weight + final.find(u)->second;;
-                      Q.push(pp(node, final.find(node)->second));
+					  if(counter < k){
+                        final[node] = ud_edges[i].weight + final.find(u)->second;;
+                        Q.push(pp(node, final.find(node)->second));
+					  }
                     }//end if
                  }//end if
                  
@@ -240,14 +234,17 @@ void ud_Dijkstra(directed ud_edges[], int edges_num, char S, int k)
                  {
                     if(final.find(node_)->second >ud_edges[i].weight + final.find(u)->second)
                     {
-                      final[node_] = ud_edges[i].weight + final.find(u)->second;;
-                      Q.push(pp(node_, final.find(node_)->second));
-                    }//end if
+					  if(counter < k){
+                        final[node_] = ud_edges[i].weight + final.find(u)->second;;
+                        Q.push(pp(node_, final.find(node_)->second));
+                      }
+					}//end if
                  }//end if
                   
                  
               }//end if
         }//end for
+		counter++;
       }//end while
 
 }//end of undirected 

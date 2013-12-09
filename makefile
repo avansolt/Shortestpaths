@@ -1,6 +1,6 @@
 CXX = g++  
 CFLAGS = -Wall
 run: shortespath.cpp
-  $(CXX) shortespath.cpp
+	$(CXX) shortespath.cpp
 clean:
-  rm -f run *.o *~ a.out
+	rm -f run *.o *~ a.out
