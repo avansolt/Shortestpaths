@@ -1,0 +1,8 @@
+D
+A B 3
+A C 1
+B C 1
+B D 3
+B E 4
+D E 3
+C E 3
