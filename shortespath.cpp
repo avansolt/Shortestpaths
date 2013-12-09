@@ -11,7 +11,6 @@ using namespace std;
 
 map<char, int> final;
 map<char, bool> picked;
-//map<char, int> count;
  
 class Prioritize
 {
@@ -63,13 +62,19 @@ int main()
    inFile.read( &input2[0], input2.size() ); //Read the file into string
   
     inFile.close();                  //Close the file
-
-
+     char comments[256];
+   
     stringstream ss(input);
     string hold;
     ss  >> hold;
-
-        while(!ss.eof())     
+	
+	if(hold[0] == '#')
+    { ss.getline(comments,256);
+    	ss >> hold;  }
+	
+	
+	//Get the amount of edges and total value for all edges put together
+    while(!ss.eof())     
   	{
            char node1, node2;
            int val;
@@ -80,13 +85,17 @@ int main()
         } 
     stringstream sa(input2);
 
-    directed d_edges[edges_num], ud_edges[edges_num]; 
+   //store values in this struct 
+   directed d_edges[edges_num]; 
     int i=0;
    string type;
+   sa >> type;     
 
-     sa >> type;     
-
-     while(!sa.eof())
+   if(type[0] == '#')
+   {  sa.getline(comments,256);
+      sa >> type;  }
+     
+	 while(!sa.eof())
         {
            char node1, node2;
            int val;
@@ -99,13 +108,13 @@ int main()
            d_edges[i].node2 = node2;
            d_edges[i].weight =val;
           
+		  //initialize values in final map and boolean map
           if(final.find(node1) == final.end())
-          { final[node1] = max; //count[node1] = 0;
+          { final[node1] = max; 
             picked[node1] = false;  }
           if(final.find(node2) == final.end())
-          { final[node2] = max;  //count[node2] = 0;
+          { final[node2] = max;  
             picked[node2] = false;}
-   
            i++;           }
         }
 
@@ -114,7 +123,6 @@ int main()
   cout<< "Please enter the source node "<<endl;
   cin >> S;
 
-  
   cout<<"Dijkstra\n"<<"Source : " << S<< endl;
   
         if(type== "D")
@@ -127,9 +135,6 @@ int main()
    for (it=final.begin(); it!=final.end(); ++it)
        {cout <<"Node: "<<it->first << " = " << it->second << '\n';
          it->second = max; }
-    /*
-   for (it=count.begin(); it!=count.end(); ++it)
-       { it->second = 0; }*/
 
   int k;
   cout<<"Please plug in k: \n";
@@ -147,7 +152,7 @@ int main()
   else{ud_Dijkstra(d_edges,edges_num, S, k);}
 
   for (it=final.begin(); it!=final.end(); ++it)
-  {cout << it->first << " = " << it->second << '\n';
+  {cout <<"Node: " <<it->first << " = " << it->second << '\n';
      it->second = max; }
 
 
@@ -172,13 +177,15 @@ void d_Dijkstra(directed d_edges[], int edges_num, char S, int k)
       else
         {continue;}
 
-
+     //check all edges
       for(int i=0; i < edges_num ; i++)
       { 
+	       //check the edges that are from or start from node u
            if(d_edges[i].node1 == u && picked.find(i)->second == false )
            {             
              node = d_edges[i].node2; //node it that gets the weight
-
+			 
+             // check node weight and make sure it is the smallest possible value
              if(final.find(node)->second > d_edges[i].weight + final.find(u)->second)
  		     {
 	           if(counter < k){
@@ -188,7 +195,7 @@ void d_Dijkstra(directed d_edges[], int edges_num, char S, int k)
              }
            }
       }
-	  counter++;
+	  counter++; //increment the distance from the source
    }
 }//end of directed
 void ud_Dijkstra(directed ud_edges[], int edges_num, char S, int k)
@@ -240,8 +247,7 @@ void ud_Dijkstra(directed ud_edges[], int edges_num, char S, int k)
                       }
 					}//end if
                  }//end if
-                  
-                 
+                         
               }//end if
         }//end for
 		counter++;

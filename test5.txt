@@ -1,0 +1,8 @@
+#lalalalakalla ok
+UD
+A B 3
+C D 5
+B C 6
+C A 1
+D A 5
+B D 1
