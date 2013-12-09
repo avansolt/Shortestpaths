@@ -11,7 +11,8 @@ using namespace std;
 
 map<char, int> final;
 map<char, bool> picked;
-
+map<char, int> count;
+ 
 class Prioritize
 {
 public:
@@ -29,15 +30,14 @@ struct directed{
 };
 
 //Functions
-
-void d_Dijkstra(directed d_edges[], int edges_num,char S);
-void ud_Dijkstra(directed ud_edges[], int edges_num, char S);
+void d_Dijkstra(directed d_edges[], int edges_num,char S,int k);
+void ud_Dijkstra(directed ud_edges[], int edges_num, char S, int k);
 
 
 int main()
 {
         char filename[20];
-        
+        int max =0;        
         int edges_num=0;
         cout << "Please enter file name\n";
         cin >> filename;
@@ -75,8 +75,8 @@ int main()
            int val;
            ss >> node1 >> node2 >> val;
            if(ss.eof()){break;}
-           edges_num++;   
-       cout << node1<< " " <<node2<<endl;
+             max+=val;
+            edges_num++;   
         } 
     stringstream sa(input2);
 
@@ -100,38 +100,60 @@ int main()
            d_edges[i].weight =val;
           
           if(final.find(node1) == final.end())
-          { final[node1] = 999;
+          { final[node1] = max; count[node1] = 0;
             picked[node1] = false;  }
           if(final.find(node2) == final.end())
-          { final[node2] = 999;  
+          { final[node2] = max;  count[node2] = 0;
             picked[node2] = false;}
    
-
-  cout <<d_edges[i].node1<<" " <<  d_edges[i].node2 <<  d_edges[i].weight << endl;
            i++;           }
         }
 
-  cout << "edges: "<< edges_num << " " <<i<<endl;
   char S;
  
   cout<< "Please enter the source node "<<endl;
   cin >> S;
 
+  
   cout<<"Dijkstra\n"<<"Source : " << S<< endl;
   
         if(type== "D")
-          {d_Dijkstra(d_edges,edges_num, S);}
-        else{ud_Dijkstra(d_edges,edges_num, S);}
+          {d_Dijkstra(d_edges,edges_num, S, max);}
+        else{ud_Dijkstra(d_edges,edges_num, S, max);}
+
+  map<char,int>::iterator it;
+
+   //print nodes shortest path
+   for (it=final.begin(); it!=final.end(); ++it)
+       {cout << it->first << " = " << it->second << '\n';
+         it->second = max; }
+
+   for (it=count.begin(); it!=count.end(); ++it)
+       { it->second = 0; }
+
   int k;
   cout<<"Please plug in k: \n";
   cin >> k;
   cout<<"Please plug inthe Source node:\n";
   cin >> S;
- 
+
+  map<char,bool>::iterator itr;
+  //reset picked to false
+  for (itr=picked.begin(); itr!=picked.end(); ++itr)
+        itr->second = false;
+
+        if(type== "D")
+          {cout<<"ok\n"; d_Dijkstra(d_edges,edges_num, S, k);}
+        else{ud_Dijkstra(d_edges,edges_num, S, k);}
+
+   for (it=final.begin(); it!=final.end(); ++it)
+       {cout << it->first << " = " << it->second << '\n';
+         it->second = max; }
+
 
   return 0;
 }//end main
-void d_Dijkstra(directed d_edges[], int edges_num, char S)
+void d_Dijkstra(directed d_edges[], int edges_num, char S, int k)
 {
     priority_queue<pp, vector<pp> , Prioritize > Q;
    
@@ -162,14 +184,18 @@ void d_Dijkstra(directed d_edges[], int edges_num, char S)
 
                 if(final.find(node)->second > d_edges[i].weight + final.find(u)->second)
  		{
-                    final[node] = d_edges[i].weight + final.find(u)->second;;
+	           if(count.find(S)->second < k){cout<<"in: "<<count.find(node)->first<<endl;
+                    final[node] = d_edges[i].weight + final.find(u)->second;
                     Q.push(pp(node, final.find(node)->second));
-		}
+	            }
+                }
            }
       }
+                    count.find(S)->second+=1;
+
    }
 }//end of directed
-void ud_Dijkstra(directed ud_edges[], int edges_num, char S)
+void ud_Dijkstra(directed ud_edges[], int edges_num, char S, int k)
 {
 
    priority_queue<pp, vector<pp> , Prioritize > Q;
