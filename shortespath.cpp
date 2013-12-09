@@ -156,7 +156,7 @@ int main()
 void d_Dijkstra(directed d_edges[], int edges_num, char S, int k)
 {
     priority_queue<pp, vector<pp> , Prioritize > Q;
-   
+    int counter=0;  
     char u, node; 
    
     final[S] = 0;
@@ -184,13 +184,13 @@ void d_Dijkstra(directed d_edges[], int edges_num, char S, int k)
 
                 if(final.find(node)->second > d_edges[i].weight + final.find(u)->second)
  		{
-	           if(count.find(S)->second < k){cout<<"in: "<<count.find(node)->first<<endl;
+	           if(counter < k){
                     final[node] = d_edges[i].weight + final.find(u)->second;
                     Q.push(pp(node, final.find(node)->second));
 	            }
                 }
            }
-      }
+      } counter++;
                     count.find(S)->second+=1;
 
    }
