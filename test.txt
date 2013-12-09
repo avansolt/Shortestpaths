@@ -1,3 +1,4 @@
+#comment of input
 D 
 A B 4 
 A C 2 
